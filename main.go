@@ -1,12 +1,22 @@
 package main
 
 import (
-	"webblackjack/game/deck"
+	"fmt"
+	"os"
+	"strconv"
+	"webgame/server"
 )
 
 func main() {
-	d := deck.NewDeck()
-	d.Print()
-	d.Shuffle()
-	d.Print()
+	args := os.Args
+	s := server.Server{}
+	if len(args) > 1 {
+		newPort, err := strconv.ParseInt(os.Args[1], 10, 32)
+		if err != nil {
+			fmt.Println("bad port provided", os.Args[1])
+		} else {
+			s.Port = int(newPort)
+		}
+	}
+	s.Start()
 }
