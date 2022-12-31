@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"webgame/game/deck"
+	"webgame/game/player"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,9 +22,25 @@ func (s *Server) Start() {
 	}
 
 	router := gin.Default()
+
+	v1 := router.Group("/api/player")
+	{
+		v1.GET("", GetPlayer)
+		v1.POST("", AddPlayer)
+	}
+
 	router.GET("/deck", getDeck)
 	router.GET("/shuffled", getShuffledDeck)
 	router.Run(fmt.Sprintf("localhost:%d", s.Port))
+
+}
+
+func GetPlayer(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, player.NewPlayer(0, "Jimmy", "Password"))
+}
+
+func AddPlayer(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, player.NewPlayer(0, "Jimmy", "Password"))
 }
 
 // getDeck responds with the list of all albums as JSON.
@@ -35,4 +52,8 @@ func getShuffledDeck(c *gin.Context) {
 	d := deck.NewDeck()
 	d.Shuffle()
 	c.IndentedJSON(http.StatusOK, d)
+}
+
+func getPersons(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "getPersons Called"})
 }
